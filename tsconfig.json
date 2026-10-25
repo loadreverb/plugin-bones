@@ -25,7 +25,8 @@
   },
   "include": [
     "src",
-    "data"
+    "data",
+    "tests"
   ],
   "exclude": [
     "node_modules"

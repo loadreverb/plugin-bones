@@ -1,0 +1,108 @@
+{
+  "nodes": {
+    "level_pl1": {
+      "id": "level_pl1",
+      "type": "level",
+      "level": 0,
+      "height": 2.8,
+      "baseElevation": 0.35
+    },
+    "wall_pl_south": {
+      "id": "wall_pl_south",
+      "type": "wall",
+      "parentId": "level_pl1",
+      "start": [-3.418307, -3.649038],
+      "end": [4.460289, -2.259851],
+      "thickness": 0.25,
+      "height": 2.8,
+      "frontSide": "exterior",
+      "children": ["door_pl_1"]
+    },
+    "wall_pl_east": {
+      "id": "wall_pl_east",
+      "type": "wall",
+      "parentId": "level_pl1",
+      "start": [4.460289, -2.259851],
+      "end": [3.418307, 3.649038],
+      "thickness": 0.25,
+      "height": 2.8,
+      "frontSide": "exterior",
+      "children": ["window_pl_1", "window_pl_2"]
+    },
+    "wall_pl_north": {
+      "id": "wall_pl_north",
+      "type": "wall",
+      "parentId": "level_pl1",
+      "start": [3.418307, 3.649038],
+      "end": [-4.460289, 2.259851],
+      "thickness": 0.25,
+      "height": 2.8,
+      "frontSide": "exterior",
+      "children": []
+    },
+    "wall_pl_west": {
+      "id": "wall_pl_west",
+      "type": "wall",
+      "parentId": "level_pl1",
+      "start": [-4.460289, 2.259851],
+      "end": [-3.418307, -3.649038],
+      "thickness": 0.25,
+      "height": 2.8,
+      "frontSide": "exterior",
+      "children": []
+    },
+    "door_pl_1": {
+      "id": "door_pl_1",
+      "type": "door",
+      "position": [2.0, 1.025, 0],
+      "width": 0.9,
+      "height": 2.05,
+      "roughOpeningWidth": 1.0,
+      "roughOpeningHeight": 2.15
+    },
+    "window_pl_1": {
+      "id": "window_pl_1",
+      "type": "window",
+      "position": [1.5, 1.5, 0],
+      "width": 1.2,
+      "height": 1.2,
+      "roughOpeningWidth": 1.3,
+      "roughOpeningHeight": 1.3
+    },
+    "window_pl_2": {
+      "id": "window_pl_2",
+      "type": "window",
+      "position": [4.5, 1.5, 0],
+      "width": 1.2,
+      "height": 1.2,
+      "roughOpeningWidth": 1.3,
+      "roughOpeningHeight": 1.3
+    },
+    "slab_pl_1": {
+      "id": "slab_pl_1",
+      "type": "slab",
+      "parentId": "level_pl1",
+      "polygon": [
+        [-3.418307, -3.649038],
+        [4.460289, -2.259851],
+        [3.418307, 3.649038],
+        [-4.460289, 2.259851]
+      ],
+      "elevation": 0.0,
+      "thickness": 0.2
+    },
+    "roof_pl_1": {
+      "id": "roof_pl_1",
+      "type": "roof-segment",
+      "parentId": "level_pl1",
+      "roofType": "gable",
+      "position": [0.0, 2.8, 0.0],
+      "rotation": 0.174533,
+      "width": 8.0,
+      "depth": 6.0,
+      "pitch": 40,
+      "overhang": 0.3,
+      "wallHeight": 0.4
+    }
+  }
+}
