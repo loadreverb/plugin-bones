@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://estimates-factory.local/visual-bones-v1.json",
+  "title": "Polish Bones visualization sidecar",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "unit",
+    "axis",
+    "sceneHash",
+    "config",
+    "parts",
+    "warnings"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "visual-bones-v1"
+    },
+    "unit": {
+      "const": "m"
+    },
+    "axis": {
+      "const": "Y_UP"
+    },
+    "sceneHash": {
+      "type": "string",
+      "minLength": 8
+    },
+    "config": {
+      "type": "object",
+      "required": [
+        "technology",
+        "foundation",
+        "floor"
+      ],
+      "properties": {
+        "technology": {
+          "enum": [
+            "ceramic",
+            "aac",
+            "silicate",
+            "timber_frame"
+          ]
+        },
+        "foundation": {
+          "enum": [
+            "raft",
+            "strip"
+          ]
+        },
+        "floor": {
+          "enum": [
+            "concrete_slab",
+            "timber_joists"
+          ]
+        },
+        "visualOnly": {
+          "const": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/part"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sourceId",
+        "levelId",
+        "technology",
+        "stage",
+        "sequence",
+        "role",
+        "materialId",
+        "shape",
+        "position",
+        "rotation",
+        "dims"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "levelId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "technology": {
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "role": {
+          "type": "string"
+        },
+        "materialId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shape": {
+          "const": "box"
+        },
+        "position": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation": {
+          "$ref": "#/$defs/vec3"
+        },
+        "dims": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "warning": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

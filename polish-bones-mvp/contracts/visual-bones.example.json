@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "visual-bones-v1",
+  "unit": "m",
+  "axis": "Y_UP",
+  "sceneHash": "sha256:demo-example-not-real",
+  "config": {
+    "technology": "ceramic",
+    "foundation": "raft",
+    "floor": "concrete_slab",
+    "visualOnly": true
+  },
+  "parts": [
+    {
+      "id": "v1:wall001:ceramic:course000:piece000",
+      "sourceId": "wall001",
+      "levelId": "level001",
+      "technology": "ceramic",
+      "stage": "S2",
+      "sequence": 2000,
+      "role": "masonry-unit",
+      "materialId": "ceramic_red",
+      "shape": "box",
+      "position": [
+        0.125,
+        0.119,
+        0.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "dims": [
+        0.24,
+        0.226,
+        0.245
+      ]
+    },
+    {
+      "id": "v1:slab001:raft:0",
+      "sourceId": "slab001",
+      "levelId": "level001",
+      "technology": "ceramic",
+      "stage": "S1",
+      "sequence": 100,
+      "role": "foundation-slab",
+      "materialId": "concrete_raw",
+      "shape": "box",
+      "position": [
+        0,
+        -0.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "dims": [
+        10.0,
+        0.2,
+        8.0
+      ]
+    }
+  ],
+  "warnings": [
+    "Example illustrates contract only; parts are not reconstructed from an actual Pascal scene."
+  ]
+}

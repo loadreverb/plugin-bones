@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "visual-presets-v1",
+  "disclaimer": "Schematic VISUAL-ONLY demonstration parameters. Not verified manufacturer dimensions or engineering design defaults. User/project should supply selected module and cross-sections.",
+  "unit": "m",
+  "wallTechnologies": [
+    {
+      "id": "ceramic",
+      "name": "Pustak ceramiczny",
+      "family": "masonry",
+      "module": {
+        "length": 0.25,
+        "height": 0.238,
+        "thickness": 0.25,
+        "horizontalJoint": 0.012,
+        "verticalJoint": 0.01,
+        "courseOffsetFraction": 0.5
+      },
+      "materialId": "ceramic_red",
+      "status": "editable_visual_demo"
+    },
+    {
+      "id": "aac",
+      "name": "Beton komórkowy (AAC)",
+      "family": "masonry",
+      "module": {
+        "length": 0.6,
+        "height": 0.24,
+        "thickness": 0.24,
+        "horizontalJoint": 0.003,
+        "verticalJoint": 0.003,
+        "courseOffsetFraction": 0.5
+      },
+      "materialId": "aac_white",
+      "status": "editable_visual_demo"
+    },
+    {
+      "id": "silicate",
+      "name": "Silikaty",
+      "family": "masonry",
+      "module": {
+        "length": 0.25,
+        "height": 0.22,
+        "thickness": 0.24,
+        "horizontalJoint": 0.003,
+        "verticalJoint": 0.003,
+        "courseOffsetFraction": 0.5
+      },
+      "materialId": "silicate_gray",
+      "status": "editable_visual_demo"
+    },
+    {
+      "id": "timber_frame",
+      "name": "Szkielet drewniany",
+      "family": "framing",
+      "stud": {
+        "width": 0.045,
+        "depth": 0.145,
+        "spacing": 0.6,
+        "plateHeight": 0.045
+      },
+      "materialId": "timber_raw",
+      "status": "editable_visual_demo"
+    }
+  ],
+  "foundations": [
+    {
+      "id": "raft",
+      "name": "Płyta fundamentowa",
+      "fields": [
+        "slabThicknessM"
+      ]
+    },
+    {
+      "id": "strip",
+      "name": "Ławy fundamentowe",
+      "fields": [
+        "footingWidthM",
+        "footingDepthM",
+        "stemwallHeightM",
+        "groundSlabThicknessM"
+      ]
+    }
+  ],
+  "floors": [
+    {
+      "id": "concrete_slab",
+      "name": "Płyta żelbetowa, schematyczna"
+    },
+    {
+      "id": "timber_joists",
+      "name": "Belki drewniane, schematyczne"
+    }
+  ],
+  "roof": {
+    "supportedType": "gable_pitched",
+    "strategy": "retain_pascal_envelope_and_openings; optional simplified rafters when safe"
+  },
+  "compatibility": {
+    "ceramic": {
+      "foundations": [
+        "raft",
+        "strip"
+      ],
+      "floors": [
+        "concrete_slab"
+      ]
+    },
+    "aac": {
+      "foundations": [
+        "raft",
+        "strip"
+      ],
+      "floors": [
+        "concrete_slab"
+      ]
+    },
+    "silicate": {
+      "foundations": [
+        "raft",
+        "strip"
+      ],
+      "floors": [
+        "concrete_slab"
+      ]
+    },
+    "timber_frame": {
+      "foundations": [
+        "raft",
+        "strip"
+      ],
+      "floors": [
+        "timber_joists",
+        "concrete_slab"
+      ]
+    }
+  },
+  "materials": [
+    {
+      "id": "ceramic_red",
+      "description": "red-orange generic ceramic",
+      "assets": "assets/pbr/ceramic_red",
+      "fallbackColor": "#b46c4c"
+    },
+    {
+      "id": "aac_white",
+      "description": "porous white concrete",
+      "assets": "assets/pbr/aac_white",
+      "fallbackColor": "#dedcd4"
+    },
+    {
+      "id": "silicate_gray",
+      "description": "white-grey silicate",
+      "assets": "assets/pbr/silicate_gray",
+      "fallbackColor": "#c5c6c1"
+    },
+    {
+      "id": "timber_raw",
+      "description": "raw structural timber",
+      "assets": "assets/pbr/timber_raw",
+      "fallbackColor": "#bc966e"
+    },
+    {
+      "id": "concrete_raw",
+      "description": "cast concrete",
+      "assets": "assets/pbr/concrete_raw",
+      "fallbackColor": "#999a98"
+    },
+    {
+      "id": "roof_graphite",
+      "description": "graphite metal roof",
+      "assets": "assets/pbr/roof_graphite",
+      "fallbackColor": "#414649"
+    },
+    {
+      "id": "plaster_white",
+      "description": "natural white plaster",
+      "assets": "assets/pbr/plaster_white",
+      "fallbackColor": "#e8e6df"
+    },
+    {
+      "id": "insulation_yellow",
+      "description": "generic thermal insulation",
+      "assets": "assets/pbr/insulation_yellow",
+      "fallbackColor": "#e1bd67"
+    }
+  ]
+}

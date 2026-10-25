@@ -1,0 +1,92 @@
+[
+  {
+    "title": "[PBV-01] Lock visual-bones-v1 sidecar contract and PL-mode config",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nAdopt the JSON contract and add an opt-in `pl-visual-v1` to existing bones:framing config; wire a pure `generateVisualBones(sceneNodes, config, presetData)` public computation seam. Legacy code unaffected. Use meters Y-up, source+level IDs; support warning diagnostics and deterministic ID structure. Do not implement construction math here.\n\n## Ownership\n- contracts/visual-bones.schema.json (shared spec)\n- Bones visual DTO / schema adapter\n- legacy-mode guard\n\n## Blocked by\nNone\n\n## Acceptance\n- [ ] Typecheck and existing Bones test suite pass unchanged\n- [ ] Schema v1 golden example validated in JS and Python-compatible validator\n- [ ] Legacy framing node missing PL config behaves byte-identically\n- [ ] Pure entrypoint returns stable result from empty fixture; warnings defined\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-02] Golden Pascal house fixture and geometry invariants",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nCreate a small rectangular 1-storey golden source fixture in the actual Pascal scene format, 4 walls, 1 door, 2 windows, 1 slab, gable roof. Prefer an existing Pascal example adapted with documented source boundaries. Separately keep the real PDF-to-Pascal house for visual QA when supplied; do not hallucinate windows/chimney/skylights/pergola. Test extractWalls and unit/coordinate assumptions.\n\n## Ownership\n- tests/fixtures/pl-demo-house.json\n- tests/golden-house.test.ts\n- house QA checklist\n\n## Blocked by\nNone\n\n## Acceptance\n- [ ] Golden fixture parses through actual Pascal wall/roof/level extraction\n- [ ] 4 walls, 1 door, 2 windows, wall thickness and footprint verified exactly\n- [ ] Source scene file unchanged by derive and exporter\n- [ ] Test fixture includes nonzero rotated wall and nonzero level origin to catch orientation errors\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-03] Metric masonry course engine for ceramic/AAC/silicate",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nSingle generic masonry algorithm driven by editable preset module length/height/thickness, joint height/width, alternating half-course stagger. Generate box parts and clip at ends, door/window rectangles. Preserve host wall footprint. Build only visual lintel if safe. Technology IDs ceramic, aac, silicate share this one engine; reject bad numeric dims; deterministic order and material IDs.\n\n## Ownership\n- src/pl-visual/masonry.ts\n- tests/pl-visual-masonry.test.ts\n\n## Blocked by\nPBV-01, PBV-02\n\n## Acceptance\n- [ ] All 3 material presets render different metric module layouts for same wall\n- [ ] No box intersects opening void beyond epsilon\n- [ ] Same inputs yield byte-identical sorted output\n- [ ] 3m wall and wall rotated 90 degrees pass placement tests\n- [ ] Mismatch >0.03m between wall thickness and preset thickness is a warning, never resizes host\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-04] Visual timber frame generator",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p1"
+    ],
+    "body": "## Goal\nEmit metric stud boxes, top/bottom plates, corner and simple header/jamb pieces around original openings; user editable stud section and spacing. No structural load design, no assumed fasteners/engineering. Respect wall axis and source thickness.\n\n## Ownership\n- src/pl-visual/timber.ts\n- tests/pl-visual-timber.test.ts\n\n## Blocked by\nPBV-01, PBV-02\n\n## Acceptance\n- [ ] Studs/plates and openings follow scene dimensions\n- [ ] No stud through door/window cut-out\n- [ ] Different spacing changes count deterministically\n- [ ] Material ID timber_raw, stage S2 and correct source IDs\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-05] Visual foundations/floor and safe roof structure",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p1"
+    ],
+    "body": "## Goal\nEmit schematic slab or footing ribbon from source footprint using explicit depth config. Optional timber joists / concrete upper floor only if actual source slab exists. Preserve original host pitched roof envelope, tag S3; optional schematic rafters only when roof geometry and skylight/chimney keep-outs reliably extracted, otherwise warning + no invented elements.\n\n## Ownership\n- src/pl-visual/ground-roof.ts\n- tests/pl-visual-ground-roof.test.ts\n\n## Blocked by\nPBV-01, PBV-02\n\n## Acceptance\n- [ ] Raft or strip outputs S1 parts from footprint without moving walls\n- [ ] Only source-defined floor/roof appears; no duplicate inferred floor\n- [ ] Roof skylight/chimney unknown => explicit warning, no collider through opening\n- [ ] S3 remains represented by original Pascal roof surface even if rafters omitted\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-06] Bones panel visual technology selector and compatibility rules",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nAdd minimal `PL Visual` toggle, technology dropdown (ceramic/aac/silicate/timber), foundation and floor selectors, editable dimension inputs, warnings, and Export Visual Bones button placement (wire it to PBV-07). Compatibility whitelist blocks only MVP-unsupported combinations with correct message, not legal/engineering judgments. Hide/suppress default US output in PL mode.\n\n## Ownership\n- src/pl-visual/compatibility.ts\n- src/pl-visual/ui/**\n- src/framing/schema.ts\n- src/panel.tsx (coordinator merge)\n\n## Blocked by\nPBV-01, PBV-03\n\n## Acceptance\n- [ ] 4 technology options and supported combinations selectable in real Bones UI\n- [ ] Unsupported silicate+timber_joists blocked as unsupported-by-MVP\n- [ ] Visual-only label always visible\n- [ ] US legacy selector and tests unaffected\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-07] Deterministic visual-bones.json exporter from exact preview result",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nProduce visual-bones-v1 JSON via existing browser download conventions, same parts as panel/renderer; include units, Y_UP, scene hash, levelId, sourceId, stage, sequence, materialId, dims/pos/rotation. Do not include generated parts as fake Pascal authoritative nodes. Exports can initially be two files: existing scene JSON + new sidecar. Filename UX and ZIP can be deferred.\n\n## Ownership\n- src/pl-visual/export.ts\n- src/pl-visual/export-button.tsx\n- tests/pl-visual-export.test.ts\n\n## Blocked by\nPBV-01, PBV-03\n\n## Acceptance\n- [ ] Downloads parsable schema-compliant JSON\n- [ ] No stale cached geometry after wall edit\n- [ ] Same scene/config exports byte-identical JSON\n- [ ] Same geometry feeds Pascal preview and sidecar export\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-08] Blender sidecar import with stage collections",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nExtend existing Blender importer with an optional second-step visual-bones-v1 sidecar loader. Create box object data with coordinate conversion once and level parent transforms; stage grouping and identity props. Keep original source round-trip untouched and warn on hash/schema mismatch. Don’t alter core Pascal scene importer behavior unnecessarily.\n\n## Ownership\n- pascal_blender/build/visual_bones.py\n- pascal_blender/ui/sidecar_import.py or equivalent\n- tests/test_visual_bones.py\n\n## Blocked by\nPBV-01\n\n## Acceptance\n- [ ] Fixture imports with correct Y-up -> Blender Z-up placement\n- [ ] S1/S2/S3 collections and per-part custom props appear\n- [ ] Material slots populated from semantic IDs (even color fallback before PBV-09)\n- [ ] Save/reopen `.blend` preserves stage control and original Pascal JSON\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-09] Real local CC0 PBR material loader and sample asset pack",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nCurate a minimal 6–8 CC0 generic texture sets; do not invent URLs, license, product IDs. Implement relative asset file loading, real BSDF node wiring for color (sRGB), roughness/normal (Non-Color), optional metallic; metric UV mapping, library cache; pack images in .blend. Add missing-map warnings. Avoid placeholder checkerboard. Can begin asset collection in parallel with PBV-08, merge after sidecar seam.\n\n## Ownership\n- pascal_blender/build/visual_materials.py\n- assets/pbr/**\n- materials.json\n- tests/test_visual_materials.py\n\n## Blocked by\nPBV-08\n\n## Acceptance\n- [ ] Ceramic, AAC, silicate, timber, concrete show distinct realistic surfaces\n- [ ] At least ceramic/timber/concrete have real color+roughness+normal maps\n- [ ] Offline reopen of .blend renders with packed images\n- [ ] Source/license/checksum recorded for every actual bundled asset\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  },
+  {
+    "title": "[PBV-10] Wire preview/export/import and pass golden demo acceptance",
+    "labels": [
+      "ready-for-agent",
+      "polish-bones-mvp",
+      "p0"
+    ],
+    "body": "## Goal\nIntegrator merges agent branches. Run every gate in validation/ACCEPTANCE.md, confirm US regression and lossless importer, record exact commands. Render two fixed-camera stills of one house with ceramic and timber plus tiny stage visibility animation S1→S3. Avoid generating five polished videos and avoid unrelated product catalog/cost work.\n\n## Ownership\n- integration tests\n- demo/README.md\n- Blender stage-animation smoke script\n\n## Blocked by\nPBV-02, PBV-03, PBV-04, PBV-05, PBV-06, PBV-07, PBV-08, PBV-09\n\n## Acceptance\n- [ ] Four technology modes render on same source house\n- [ ] Browser-preview geometry matches Blender output within 1cm in test\n- [ ] Source windows/doors/roof preserved, stages visible, no duplicate opaque host mesh\n- [ ] All textures loaded offline, .blend saved, US original tests pass\n- [ ] A single reproducible demo command documented\n\n## Scope ban\nNo SKU catalog, prices, certified engineering, materials takeoff, extensive UI, unrelated refactors.\n\n## Source\n`SPEC.md` and `contracts/visual-bones.schema.json`."
+  }
+]
