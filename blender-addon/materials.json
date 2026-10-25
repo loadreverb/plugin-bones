@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "visual-materials-v1",
+  "unit": "m",
+  "license": "All bundled assets are CC0 from ambientCG.com; see sourceUrl per material.",
+  "materials": {
+    "ceramic_red": {
+      "maps": {
+        "baseColor": "assets/pbr/ceramic_red/basecolor.jpg",
+        "roughness": "assets/pbr/ceramic_red/roughness.jpg",
+        "normal": "assets/pbr/ceramic_red/normal.jpg"
+      },
+      "metersPerRepeat": [
+        2.4,
+        1.2
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=Bricks097",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "218f7343091f1c0d9044fd642247d23dd322087271df1b45c8f51fdff91042dd",
+        "roughness": "a629784339b79cff67079a34f313ec5de18b8b6eb478455ac9b8df09c615b37d",
+        "normal": "3c13ff7b8018983e0d1529fa330b2d4494f92da299b72db19dbc76282f3f23e7"
+      },
+      "note": "estimated from series sibling Bricks105 published scan size (2.4m x 1.2m); red-brown running bond"
+    },
+    "aac_white": {
+      "maps": {
+        "baseColor": "assets/pbr/aac_white/basecolor.jpg",
+        "roughness": "assets/pbr/aac_white/roughness.jpg",
+        "normal": "assets/pbr/aac_white/normal.jpg"
+      },
+      "metersPerRepeat": [
+        1.1,
+        0.55
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=Concrete034",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "8ceb9186d990b31fce785e06fdc6974c160f1d27c43f6160266f164deba713aa",
+        "roughness": "a4a9e39857a19afd23a778e5abf44fcdf6bd7f93918f1cf6878b41933e553511",
+        "normal": "e509eb9dfa978e780fbebfd2acacc2ce158b5b7ced722ddc0759039dd51e18ca"
+      },
+      "note": "asset page published size 1.1m x 0.55m; pale cool-grey smooth plaster-like surface stands in for AAC block faces (geometry supplies the blocks)"
+    },
+    "silicate_gray": {
+      "maps": {
+        "baseColor": "assets/pbr/silicate_gray/basecolor.jpg",
+        "roughness": "assets/pbr/silicate_gray/roughness.jpg",
+        "normal": "assets/pbr/silicate_gray/normal.jpg"
+      },
+      "metersPerRepeat": [
+        1.5,
+        1.5
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=Concrete048",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "1bf2156b86866732660e6d3ccd1942598ac2b9e73a9bb97a23763574ac4d7722",
+        "roughness": "cf9b741e1ffc25b89a7d7a8971656463009c25b30c3fd300b3296c60daef729f",
+        "normal": "16d110670d8a1ca4dd85d498bb46afaa6953456878dae7ab6717053600dddcfc"
+      },
+      "note": "estimated; warm light greige, smooth uniform \u2014 distinct from aac_white cool pale grey; geometry supplies the block pattern"
+    },
+    "timber_raw": {
+      "maps": {
+        "baseColor": "assets/pbr/timber_raw/basecolor.jpg",
+        "roughness": "assets/pbr/timber_raw/roughness.jpg",
+        "normal": "assets/pbr/timber_raw/normal.jpg"
+      },
+      "metersPerRepeat": [
+        1.2,
+        1.2
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=Wood095",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "d33072e12e0d5b4002b691689b599ee1eb8ea5fb70eb45b4c96cc4074102197b",
+        "roughness": "db64c73221bad05058b0c0ac20d98d80dfcb4038a73acadf97960eefe1f202b7",
+        "normal": "fe72137359eda7dd5d69c12e70e694133984269e4153df7b30875b7ccc7014ac"
+      },
+      "note": "estimated; light spruce, grain runs along U \u2014 orient mapping so grain follows piece length"
+    },
+    "concrete_raw": {
+      "maps": {
+        "baseColor": "assets/pbr/concrete_raw/basecolor.jpg",
+        "roughness": "assets/pbr/concrete_raw/roughness.jpg",
+        "normal": "assets/pbr/concrete_raw/normal.jpg"
+      },
+      "metersPerRepeat": [
+        1.0,
+        1.0
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=Concrete037",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "9d28db388633303be8f068354265087bd8df4ad0cf9c1cb28bf7c20fa2e046a0",
+        "roughness": "d02f4176e000b2fb384d70f8f867fd584ce1feceee2287d68a53cc6fa4600ef8",
+        "normal": "2f86c599eb76ab412591025ba4b89c1d87cd196807ed02738041dc9490fc17a8"
+      },
+      "note": "estimated; mid-grey granular cast concrete"
+    },
+    "roof_graphite": {
+      "maps": {
+        "baseColor": "assets/pbr/roof_graphite/basecolor.jpg",
+        "roughness": "assets/pbr/roof_graphite/roughness.jpg",
+        "normal": "assets/pbr/roof_graphite/normal.jpg",
+        "metallic": "assets/pbr/roof_graphite/metallic.jpg"
+      },
+      "metersPerRepeat": [
+        1.5,
+        1.5
+      ],
+      "sourceUrl": "https://ambientcg.com/view?id=CorrugatedSteel009",
+      "license": "CC0",
+      "checksum": {
+        "baseColor": "d873459d9752377688fd14e0e4f4b813fc787e66880ce7d06ada07831be048f0",
+        "roughness": "9af07f183450a11dc59bf2cb71e91e84f8a60e866724a54e6b86f8f2fdcebbae",
+        "normal": "0682a09b02db4bd964e0297126355e7d95ebfeb31aa9c8e9835297cdc46d396a",
+        "metallic": "f6e180c91aac80365c74fa58e47caef4622690307bf439cfc8243fc618b885ad"
+      },
+      "note": "estimated ~10 ribs/tile => ~0.15m rib pitch; ribs run along U \u2014 orient down-slope; includes metalness map"
+    }
+  }
+}
