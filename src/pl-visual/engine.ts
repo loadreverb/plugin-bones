@@ -1,9 +1,12 @@
 import { createHash } from 'node:crypto'
+import { extractLevels, extractWalls } from '../core/wall-model'
+import { masonryWallParts } from './masonry'
 import { PL_PRESETS, type PlPresets } from './presets'
 import type {
   PlVisualConfig,
   VisualBonesResult,
   VisualDiagnostic,
+  VisualPart,
   VisualSceneNodes,
 } from './types'
 
@@ -22,20 +25,20 @@ export function computeSceneHash(sceneFileBytes: Uint8Array): string {
  * sequence, materials — regardless of JSON key ordering. One code path feeds
  * the Pascal preview and the sidecar export.
  *
- * Construction engines land in PBV-03 (masonry), PBV-04 (timber), PBV-05
- * (ground/roof). Until then: zero parts, the MVP compatibility verdict, and
- * defined warnings — never invented geometry.
+ * Engines: masonry (PBV-03) is live for ceramic/aac/silicate. Timber framing
+ * lands in PBV-04, foundations/floors/roof in PBV-05. Missing engines warn
+ * and emit nothing — never invented geometry.
  */
 export function generateVisualBones(
   sceneNodes: VisualSceneNodes,
   config: PlVisualConfig,
   presetData: PlPresets = PL_PRESETS,
 ): VisualBonesResult {
-  void sceneNodes // engines read it from PBV-03 on
   const warnings: string[] = []
   const diagnostics: VisualDiagnostic[] = []
 
   const compat = presetData.compatibility[config.technology]
+  let supported = false
   if (!compat) {
     diagnostics.push({
       kind: 'missing_project_data',
@@ -50,23 +53,52 @@ export function generateVisualBones(
       message: `${config.technology}+${config.floor}/${config.foundation} unsupported by current engine (visual MVP; not a construction-permissibility judgement)`,
     })
   } else {
+    supported = true
     diagnostics.push({
       kind: 'supported',
       message: `${config.technology}+${config.foundation}+${config.floor}`,
     })
-    warnings.push(
-      `pl-visual: ${config.technology} engine not implemented yet (PBV-03/04/05); no parts generated`,
-    )
   }
 
+  const parts: VisualPart[] = []
+  const tech = presetData.wallTechnologies.find((t) => t.id === config.technology)
+  if (supported && tech) {
+    const levels = extractLevels(sceneNodes)
+    if (levels.length === 0) warnings.push('pl-visual: no levels found in scene')
+    if (tech.family === 'masonry') {
+      for (const level of levels) {
+        for (const wall of extractWalls(sceneNodes, level.id)) {
+          const r = masonryWallParts(wall, level.id, tech.id, tech)
+          parts.push(...r.parts)
+          warnings.push(...r.warnings)
+        }
+      }
+      warnings.push(
+        'pl-visual: foundation/floor/roof engines not implemented yet (PBV-05) — walls only',
+      )
+    } else {
+      warnings.push(
+        `pl-visual: ${tech.family} engine not implemented yet (PBV-04) — no parts generated`,
+      )
+    }
+  }
+
+  parts.sort(
+    (a, b) =>
+      a.sequence - b.sequence ||
+      (a.sourceId < b.sourceId ? -1 : a.sourceId > b.sourceId ? 1 : a.id.localeCompare(b.id)),
+  )
+  const stageCounts: Record<string, number> = { S1: 0, S2: 0, S3: 0, S4: 0 }
+  for (const p of parts) stageCounts[p.stage] = (stageCounts[p.stage] ?? 0) + 1
+
   return {
-    parts: [],
+    parts,
     warnings,
     summary: {
       technology: config.technology,
       foundation: config.foundation,
       floor: config.floor,
-      stageCounts: { S1: 0, S2: 0, S3: 0, S4: 0 },
+      stageCounts,
       diagnostics,
     },
   }
