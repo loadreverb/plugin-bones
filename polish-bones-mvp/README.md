@@ -4,7 +4,7 @@
 
 ## Start here
 
-1. Give `agents/ORCHESTRATOR_PROMPT.md` to your coordinating AI coding agent, with access to clones/forks of `pascalorg/plugin-bones` (master) and `pascalorg/pascal-blender` (main), and the actual Pascal demo house JSON / blueprint PDF if available.
+1. Give `agents/ORCHESTRATOR_PROMPT.md` to your coordinating AI coding agent, with access to this fork (master) and a read-only clone of `pascalorg/pascal-blender` (main) as a reference; the actual Pascal demo house JSON / blueprint PDF if available.
 2. Implement tickets **PBV-01 + PBV-02 → PBV-03 → PBV-07 → PBV-08 → PBV-09** first: one ceramic wall plus Blender texture is a real vertical slice. Then run PBV-04,05,06,09,10.
 3. Accept only when `validation/ACCEPTANCE.md` passes with exported `.blend` showing correct house openings and ceramic/AAC/silicate/timber alternatives.
 

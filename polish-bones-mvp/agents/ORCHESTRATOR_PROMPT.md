@@ -4,7 +4,7 @@ You are the integration lead for `Polish Bones Visual MVP` inside Estimates Fact
 
 ## Inputs
 - This folder: `README.md`, `SPEC.md`, `catalog/presets.json`, `contracts/visual-bones.schema.json`, `tickets/AGENT_TICKETS.md`, `validation/ACCEPTANCE.md`.
-- Clone/fork `https://github.com/pascalorg/plugin-bones` (master) and `https://github.com/pascalorg/pascal-blender` (main). Do not assume upstream write permissions.
+- Writable repo: this plugin-bones fork only. Keep `https://github.com/pascalorg/pascal-blender` (main) as a **read-only reference clone** (conventions: coordinate conversion, hierarchy, custom props); all new code — TypeScript and the companion Blender addon (`blender-addon/`) — lands in this fork.
 - Use actual Pascal demo JSON from the user's house when supplied; otherwise use golden fixture based on `pascal-blender/examples/demo-house.json`. Do not pretend you received a real PDF if absent.
 
 ## Your FIRST concrete action
@@ -14,7 +14,7 @@ Create the sidecar contract adapter and prove `one Pascal wall with an opening -
 1. **Contract agent** — PBV-01, owns shared schema and Bones visual DTO.
 2. **Fixture/QA agent** — PBV-02, owns tiny real Pascal JSON golden scene and geometry/orientation tests.
 3. **Masonry agent** — PBV-03, owns metric course algorithm, untouched legacy US code.
-4. **Blender bridge agent** — PBV-08, owns sidecar importer, hierarchy, stable IDs and coordinate transforms.
+4. **Blender bridge agent** — PBV-08, owns the companion addon (`blender-addon/`): sidecar importer, hierarchy, stable IDs, coordinate transforms.
 5. **PBR agent** — PBV-09, owns actual CC0 image sets, manifest, shader nodes and image packing.
 6. **Integration agent (you)** — PBV-07 exporter and merge. Assign PBV-04 timber, PBV-05 foundations/roof, PBV-06 UI to agents only after the vertical slice works. PBV-10 is the final merge.
 

@@ -1,26 +1,27 @@
 # Blender PBR pipeline (MVP only)
 
-**Current fact:** `pascal-blender` creates Principled BSDF materials from Pascal presets, but `build/common.py::_wire_texture` currently inserts a generated checker placeholder instead of loading the real image. Derived Bones `Member[]` is not recognized by the normal scene node builders. Therefore both a sidecar adapter and image-node loader are required.
+**Current fact:** `pascal-blender` creates Principled BSDF materials from Pascal presets, but `build/common.py::_wire_texture` currently inserts a generated checker placeholder instead of loading the real image. Derived Bones `Member[]` is not recognized by the normal scene node builders. Therefore both a sidecar adapter and image-node loader are required — both live in the **companion addon inside this repo** (`blender-addon/`); the upstream `pascal-blender` extension stays unmodified.
 
 ## Minimal asset bundle layout
 
 ```
-export/
-  pascal-scene.json
-  visual-bones.json
+blender-addon/            (this repo)
   materials.json
   assets/pbr/
     ceramic_red/basecolor.jpg
     ceramic_red/roughness.jpg
     ceramic_red/normal.jpg
     ...
+export bundle (downloaded from the Pascal editor):
+  pascal-scene.json
+  visual-bones.json
 ```
 
-`materials.json` is a mapping `materialId -> { maps: {baseColor, roughness, normal, metallic?}, metersPerRepeat:[u,v], sourceUrl, license:'CC0', checksum }`. Keep file paths **relative** to export root. The `presets.json` names material categories but is NOT a repository of downloadable PBR images. Curate 6–8 appropriate source images from legal CC0 libraries; use texture assets, not specific masonry product photographs. For first demo, `baseColor+roughness+normal` sufficient, optional metalness for roof.
+`materials.json` is a mapping `materialId -> { maps: {baseColor, roughness, normal, metallic?}, metersPerRepeat:[u,v], sourceUrl, license:'CC0', checksum }`. Keep file paths **relative** to the addon root. The `presets.json` names material categories but is NOT a repository of downloadable PBR images. Curate 6 appropriate source images from legal CC0 libraries; use texture assets, not specific masonry product photographs. For first demo, `baseColor+roughness+normal` sufficient, optional metalness for roof.
 
 ## Import algorithm
 
-1. Import `pascal-scene.json` using the existing `pascal_blender` importer.
+1. Import `pascal-scene.json` using the installed upstream `pascal_blender` extension (unmodified), then run our companion addon's sidecar import.
 2. Parse and JSON-schema-validate `visual-bones.json`; warn when `sceneHash` differs from source scene. No source modification.
 3. Reuse scene's per-building/per-level hierarchy but create `Construction/S1_Foundation`, `S2_Structure`, `S3_Roof` as child collections. Keep stage tags also in object custom properties.
 4. For each `part.shape='box'`, create one cube mesh / linked data or efficient instances; transform from Pascal Y-up to Blender Z-up once; respect level parent transform and world coordinates. Name based on part ID, not fragile display labels.

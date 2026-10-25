@@ -18,7 +18,7 @@ PBV-01 + PBV-02 → PBV-03 → PBV-07 → PBV-08 → PBV-09 → **one ceramic wa
 ### PBV-01 — Lock visual-bones-v1 sidecar contract and PL-mode config
 - **Repo:** plugin-bones · **Priority:** P0 · **Dependencies:** none · **Gate:** foundation
 - **File ownership:** contracts/visual-bones.schema.json (shared spec), Bones visual DTO / schema adapter, legacy-mode guard
-- **Work:** Adopt the JSON contract and add an opt-in `pl-visual-v1` to existing bones:framing config; wire a pure `generateVisualBones(sceneNodes, config, presetData)` public computation seam. Legacy code unaffected. Use meters Y-up, source+level IDs; support warning diagnostics and deterministic ID structure. Do not implement construction math here.
+- **Work:** Adopt the JSON contract and add an opt-in `pl-visual-v1` to existing bones:framing config; wire a pure `generateVisualBones(sceneNodes, config, presetData)` public computation seam. Legacy code unaffected. Use meters Y-up, source+level IDs; support warning diagnostics and deterministic ID structure. sequence = stage buckets (S1→1000+n, S2→2000+n, S3→3000+n, sub-ordered wall→course→piece); sceneHash = `sha256:<hex>` over the exact exported pascal-scene.json file bytes. Do not implement construction math here.
 - **Acceptance:**
   - Typecheck and existing Bones test suite pass unchanged
   - Schema v1 golden example validated in JS and Python-compatible validator
@@ -69,7 +69,7 @@ PBV-01 + PBV-02 → PBV-03 → PBV-07 → PBV-08 → PBV-09 → **one ceramic wa
 ### PBV-06 — Bones panel visual technology selector and compatibility rules
 - **Repo:** plugin-bones · **Priority:** P0 · **Dependencies:** PBV-01, PBV-03 · **Gate:** integration
 - **File ownership:** src/pl-visual/compatibility.ts, src/pl-visual/ui/**, src/framing/schema.ts, src/panel.tsx (coordinator merge)
-- **Work:** Add minimal `PL Visual` toggle, technology dropdown (ceramic/aac/silicate/timber), foundation and floor selectors, editable dimension inputs, warnings, and Export Visual Bones button placement (wire it to PBV-07). Compatibility whitelist blocks only MVP-unsupported combinations with correct message, not legal/engineering judgments. Hide/suppress default US output in PL mode.
+- **Work:** Add minimal `PL Visual` toggle, technology dropdown (ceramic/aac/silicate/timber), foundation and floor selectors, editable dimension inputs, warnings, and Export Visual Bones button placement (wire it to PBV-07). Compatibility whitelist blocks only MVP-unsupported combinations with correct message, not legal/engineering judgments. Hide/suppress default US output in PL mode. Per-wall technology override explicitly deferred: global selector only.
 - **Acceptance:**
   - 4 technology options and supported combinations selectable in real Bones UI
   - Unsupported silicate+timber_joists blocked as unsupported-by-MVP
@@ -87,19 +87,20 @@ PBV-01 + PBV-02 → PBV-03 → PBV-07 → PBV-08 → PBV-09 → **one ceramic wa
   - Same geometry feeds Pascal preview and sidecar export
 
 ### PBV-08 — Blender sidecar import with stage collections
-- **Repo:** pascal-blender · **Priority:** P0 · **Dependencies:** PBV-01 · **Gate:** vertical-slice
-- **File ownership:** pascal_blender/build/visual_bones.py, pascal_blender/ui/sidecar_import.py or equivalent, tests/test_visual_bones.py
-- **Work:** Extend existing Blender importer with an optional second-step visual-bones-v1 sidecar loader. Create box object data with coordinate conversion once and level parent transforms; stage grouping and identity props. Keep original source round-trip untouched and warn on hash/schema mismatch. Don’t alter core Pascal scene importer behavior unnecessarily.
+- **Repo:** plugin-bones · **Priority:** P0 · **Dependencies:** PBV-01 · **Gate:** vertical-slice
+- **File ownership:** blender-addon/visual_bones.py, blender-addon/operators.py, tests/blender/test_visual_bones.py
+- **Work:** Build a companion Blender addon inside this repo that imports visual-bones-v1 as a second step, after the unmodified upstream pascal-blender extension imports pascal-scene.json. Box objects with one Y-up→Z-up conversion and level parent transforms; S1/S2/S3 stage collections plus optional S4_Openings_Existing grouping of imported door/window objects located via their pascal custom props; per-part identity props. Warn on sceneHash (sha256 of scene file bytes) or schema mismatch. Never mutate the upstream importer's objects or their lossless round-trip data.
 - **Acceptance:**
   - Fixture imports with correct Y-up -> Blender Z-up placement
   - S1/S2/S3 collections and per-part custom props appear
   - Material slots populated from semantic IDs (even color fallback before PBV-09)
   - Save/reopen `.blend` preserves stage control and original Pascal JSON
+  - Runs alongside installed upstream pascal-blender extension; never modifies host scene objects
 
 ### PBV-09 — Real local CC0 PBR material loader and sample asset pack
-- **Repo:** pascal-blender · **Priority:** P0 · **Dependencies:** PBV-08 · **Gate:** vertical-slice
-- **File ownership:** pascal_blender/build/visual_materials.py, assets/pbr/**, materials.json, tests/test_visual_materials.py
-- **Work:** Curate a minimal 6–8 CC0 generic texture sets; do not invent URLs, license, product IDs. Implement relative asset file loading, real BSDF node wiring for color (sRGB), roughness/normal (Non-Color), optional metallic; metric UV mapping, library cache; pack images in .blend. Add missing-map warnings. Avoid placeholder checkerboard. Can begin asset collection in parallel with PBV-08, merge after sidecar seam.
+- **Repo:** plugin-bones · **Priority:** P0 · **Dependencies:** PBV-08 · **Gate:** vertical-slice
+- **File ownership:** blender-addon/visual_materials.py, blender-addon/assets/pbr/**, blender-addon/materials.json, tests/blender/test_visual_materials.py
+- **Work:** Curate 6 CC0 generic texture sets (ceramic, aac, silicate, timber, concrete, roof metal); do not invent URLs, license, product IDs. Assets live in-repo under `blender-addon/assets/pbr/` with `blender-addon/materials.json` beside the addon code. Implement relative asset file loading, real BSDF node wiring for color (sRGB), roughness/normal (Non-Color), optional metallic; metric UV mapping, library cache; pack images in .blend. Add missing-map warnings. Avoid placeholder checkerboard. Can begin asset collection in parallel with PBV-08, merge after sidecar seam.
 - **Acceptance:**
   - Ceramic, AAC, silicate, timber, concrete show distinct realistic surfaces
   - At least ceramic/timber/concrete have real color+roughness+normal maps
@@ -109,10 +110,10 @@ PBV-01 + PBV-02 → PBV-03 → PBV-07 → PBV-08 → PBV-09 → **one ceramic wa
 ### PBV-10 — Wire preview/export/import and pass golden demo acceptance
 - **Repo:** cross-repo · **Priority:** P0 · **Dependencies:** PBV-02, PBV-03, PBV-04, PBV-05, PBV-06, PBV-07, PBV-08, PBV-09 · **Gate:** release
 - **File ownership:** integration tests, demo/README.md, Blender stage-animation smoke script
-- **Work:** Integrator merges agent branches. Run every gate in validation/ACCEPTANCE.md, confirm US regression and lossless importer, record exact commands. Render two fixed-camera stills of one house with ceramic and timber plus tiny stage visibility animation S1→S3. Avoid generating five polished videos and avoid unrelated product catalog/cost work.
+- **Work:** Integrator merges agent branches. Run every gate in validation/ACCEPTANCE.md, confirm US regression and lossless importer, record exact commands. Render two fixed-camera stills of one house with ceramic and timber plus tiny stage visibility animation S1→S3; host walls are hidden by the smoke script/artist, never by importer mutation. Avoid generating five polished videos and avoid unrelated product catalog/cost work.
 - **Acceptance:**
   - Four technology modes render on same source house
   - Browser-preview geometry matches Blender output within 1cm in test
-  - Source windows/doors/roof preserved, stages visible, no duplicate opaque host mesh
+  - Source windows/doors/roof preserved, stages visible, no duplicate opaque host mesh (host walls hidden via script, not importer mutation)
   - All textures loaded offline, .blend saved, US original tests pass
   - A single reproducible demo command documented

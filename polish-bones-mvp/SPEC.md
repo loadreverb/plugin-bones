@@ -58,11 +58,13 @@ New pure deterministic API (conceptual contract, implementation may use existing
 - Add optional PL visual configuration to the existing `bones:framing` node (no new building editor). A toggle and technology/foundation/floor selector in the existing Bones panel is enough; no new complicated app UX.
 - Do not extend US jurisdiction tables or masquerade US CMU / timber rules as Polish standards. Dispatch PL mode to a new pure visual engine (reuse slice extractors), adapt generated parts to the current instanced `Member[]` renderer. Suppress legacy US members while PL mode is active to prevent duplication. One code path supplies both preview and JSON export.
 - No frontend downloads of assets required for preview: flat/color material fallback in Pascal; real PBR in Blender.
-- Preferred export: `pascal-scene.json` (existing editor export) PLUS `visual-bones.json` (new button). Bundling both with `assets/` into a ZIP may follow if no friction. The addon imports both using sibling filename lookup or a second import action (minimal invasive route).
+- Preferred export: `pascal-scene.json` (existing editor export) PLUS `visual-bones.json` (new button). Bundling both with `assets/` into a ZIP may follow if no friction. The **companion Blender addon in this repo** (`blender-addon/`) imports the sidecar after the unmodified upstream `pascal-blender` extension imports the scene (sibling-filename lookup or a second import action, whichever is less invasive).
 
 ### Blender integration & texture behavior
-- Source scene first, derived sidecar second. Preserve importer’s lossless Pascal scene round-trip; don't persist derived parts as fake authoritative Pascal source nodes. New stage collections `Construction/S1_Foundation`, `S2_Structure`, `S3_Roof`, optional `S4_Openings_Existing`.
+- **Companion addon in this repo:** the unmodified upstream `pascal-blender` extension imports the scene first; our `blender-addon/` imports the sidecar second and never mutates host objects or their lossless round-trip data. Optional `S4_Openings_Existing` grouping of imported door/window objects located via their pascal custom props. Host walls stay visible/non-destructive; stage animation hides them via script/artist, not importer mutation.
+- Source scene first, derived sidecar second. Preserve importer's lossless Pascal scene round-trip; don't persist derived parts as fake authoritative Pascal source nodes. New stage collections `Construction/S1_Foundation`, `S2_Structure`, `S3_Roof`, optional `S4_Openings_Existing`.
 - Convert from Pascal Y-up to Blender Z-up **exactly once**, using existing coordinate conversion helpers. Preserve level-local / storey transformations and original source node IDs.
+- `sceneHash` = `sha256:<hex>` over the exact exported `pascal-scene.json` file bytes; the addon recomputes it over the file it imported and warns on mismatch.
 - Reuse cube meshes per shape+material where possible (linked meshes/instances); no costly per-block unique high-poly mesh. Every part gets stable custom properties `visual_part_id`, `source_id`, `stage`, `sequence`, `technology`, `material_id`.
 - PBR materials: use local files with relative paths, `Base Color` sRGB, `Roughness` and `Normal` Non-Color, Normal Map node, optional Metallic/Height. Planar/world-aligned metric scale; timber grain follows beams when possible. **No remote fetch required during Blender import**. Package or pack textures into `.blend` at export time.
 - Reference PBR assets from ambientCG and Poly Haven under CC0; asset IDs, source/license, checksums recorded in `materials.json`. Avoid manually inventing/download links in preset data.
@@ -71,7 +73,7 @@ New pure deterministic API (conceptual contract, implementation may use existing
 ## Implementation decisions / module seams
 - `PLUGIN CORE`: one pure `generateVisualBones` receives extracted source slices and config; new masonry and timber generators; small compatibility validator and preset loader.
 - `PLUGIN ADAPTER`: extend `bones:framing` config, Bones panel, compute/preview renderer and sidecar export action; legacy default unchanged.
-- `BLENDER ADDON`: sidecar importer invoked after normal Pascal importer; PBR material asset loader; collection and per-part data properties.
+- `BLENDER ADDON` (this repo, `blender-addon/`): companion sidecar importer run after the unmodified upstream pascal-blender extension; PBR material asset loader with in-repo assets; collection and per-part data properties.
 - `SHARED CONTRACT`: `contracts/visual-bones.schema.json` is the interface between TypeScript and Python. Add schema versioning and a fixture used by both repos.
 - `TEST SEAM`: pure visual engine -> exact sidecar fixture -> Blender headless stage/material verification. Few narrow unit tests for course/opening math; don't test hidden implementation shape except where needed.
 
@@ -89,4 +91,4 @@ Exact material SKUs, suppliers, costs, quantity takeoffs, thermal/moisture/fire 
 - The earlier exhaustive Polish Bones catalog is NOT part of this MVP. The only four modes above are accepted initial scope.
 - `visual-only` is a prominent UI/export label. A wall can be accurately located but a construction breakdown remains illustrative.
 - The developer owns only visual correctness; architects/engineers own actual design and structural decisions.
-- Ticket publishing must target a fork writable by the user's agents; these are prepared drafts, not published issues.
+- Ticket publishing targets this fork (`loadreverb/plugin-bones` GitHub issues); `tickets/github-issues.json` is the import seed and `tickets/AGENT_TICKETS.md` the frozen reference copy.

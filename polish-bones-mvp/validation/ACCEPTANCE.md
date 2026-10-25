@@ -1,7 +1,7 @@
 # Required MVP acceptance (no feature-creep)
 
 ## G0 — Repository/contract smoke
-- Two forks/clones runnable in dev; existing Bones tests still pass; Blender addon headless import still passes.
+- This fork runnable in dev (`bun install`, `check-types`, `test`); existing Bones tests still pass; upstream `pascal-blender` extension installed unmodified in Blender 5.2 and its headless import still passes.
 - `visual-bones-v1` example validates against schema and TS/Python both read it.
 
 ## G1 — One vertical slice FIRST
