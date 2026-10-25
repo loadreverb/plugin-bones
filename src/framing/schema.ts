@@ -1,5 +1,6 @@
 import { BaseNode, nodeType, objectId } from '@pascal-app/core'
 import { z } from 'zod'
+import { PlVisualConfig } from '../pl-visual/types'
 
 /**
  * The `bones:framing` config node — the ONLY thing Bones persists for
@@ -218,6 +219,15 @@ export const FramingNode = BaseNode.extend({
    * default (same byte-parity rule).
    */
   lgsMachine: z.string().optional(),
+  /**
+   * PL Visual Mode config (Polish Bones Visual MVP — visualization-only,
+   * polish-bones-mvp/SPEC.md). OPTIONAL with NO zod default, same
+   * byte-parity rule as `framingSystem`: PRESENCE ACTIVATES PL mode for the
+   * level (no separate enabled flag) and an absent field round-trips absent.
+   * One global technology choice; per-wall override deliberately deferred.
+   * While active, PL mode suppresses legacy US member derivation (PBV-06).
+   */
+  plVisual: PlVisualConfig.optional(),
 }).describe(
   `Bones framing config (engineering X-ray) — one per level.
   - jurisdiction: US state code ('CA'), 'INTL', or 'AUTO' (guessed from the browser locale/timezone)
@@ -231,3 +241,13 @@ export const FramingNode = BaseNode.extend({
 )
 
 export type FramingNode = z.infer<typeof FramingNode>
+
+/**
+ * Legacy-mode guard: PL Visual Mode is active iff the framing node carries a
+ * well-formed `plVisual` config. Everything legacy (US/Canada/INTL member
+ * derivation) must stay off this path — and PL mode must never leak metric
+ * PL presets into it.
+ */
+export function isPlVisualActive(node: { plVisual?: unknown }): boolean {
+  return PlVisualConfig.safeParse(node.plVisual).success
+}

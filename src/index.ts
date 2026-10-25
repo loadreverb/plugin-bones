@@ -95,3 +95,11 @@ export { serviceDefinition } from './service/definition'
 export { SERVICE_TYPES, ServiceNode } from './service/schema'
 export { deviceDefinition } from './device/definition'
 export { DEVICE_KINDS, DeviceNode } from './device/schema'
+// PL Visual Mode (Polish Bones Visual MVP) — pure seam + contract types.
+export { computeSceneHash, generateVisualBones } from './pl-visual/engine'
+export type {
+  PlVisualConfig,
+  VisualBonesResult,
+  VisualPart,
+  VisualSidecar,
+} from './pl-visual/types'
