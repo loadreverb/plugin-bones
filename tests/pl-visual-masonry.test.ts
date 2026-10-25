@@ -43,9 +43,9 @@ const tech = (id: string): Extract<PlWallTechnology, { family: 'masonry' }> => {
 }
 
 /** Wall-local rect of an axis-aligned-wall piece (position.x == u-center). */
-const rectOf = (p: { position: number[]; dims: number[] }) =>
+const rectOf = (p: { position: [number, number, number]; dims: [number, number, number] }): readonly [number, number, number, number] =>
   [p.position[0] - p.dims[0] / 2, p.position[1] - p.dims[1] / 2,
-   p.position[0] + p.dims[0] / 2, p.position[1] + p.dims[1] / 2] as const
+   p.position[0] + p.dims[0] / 2, p.position[1] + p.dims[1] / 2]
 
 const overlaps = (a: readonly [number, number, number, number], b: readonly [number, number, number, number]) =>
   a[0] < b[2] - 1e-6 && a[2] > b[0] + 1e-6 && a[1] < b[3] - 1e-6 && a[3] > b[1] + 1e-6
