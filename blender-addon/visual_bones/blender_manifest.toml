@@ -1,0 +1,14 @@
+schema_version = "1.0.0"
+
+id = "visual_bones"
+version = "0.1.0"
+name = "Visual Bones Sidecar Importer"
+tagline = "Import Polish Bones visual construction sidecars (companion to pascal_blender)"
+maintainer = "loadreverb"
+type = "add-on"
+website = "https://github.com/loadreverb/plugin-bones"
+tags = ["Import-Export"]
+license = ["SPDX:MIT"]
+
+[permissions]
+files = "Read the sidecar JSON, sibling scene JSON and bundled PBR assets"
