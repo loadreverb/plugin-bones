@@ -16,9 +16,29 @@ from bpy_extras.io_utils import ImportHelper
 from bpy.props import BoolProperty  # type: ignore[attr-defined]
 from bpy.types import Operator  # type: ignore[attr-defined]
 
-from . import sidecar
+from . import sidecar, visual_materials
 
 UNIT_CUBE = "VB Unit Cube"
+
+
+def _material(material_id: str, materials: dict, pbr: dict) -> "bpy.types.Material":
+    """PBR material when the bundled manifest covers the id, flat color else."""
+    mat = pbr.get(material_id)
+    if mat is not None:
+        return mat
+    name = f"VB/{material_id}"
+    mat = bpy.data.materials.get(name)
+    if mat is None:
+        mat = bpy.data.materials.new(name)
+        mat.use_nodes = True
+        bsdf = mat.node_tree.nodes.get("Principled BSDF")  # type: ignore[union-attr]
+        entry = materials.get(material_id, {})
+        color = sidecar.hex_to_rgb(entry.get("fallbackColor", "#9a9a9a"))
+        if bsdf is not None:
+            bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+            if "metallic" in entry.get("maps", {}):
+                bsdf.inputs["Metallic"].default_value = 1.0
+    return mat
 
 
 def _unit_cube_mesh() -> "bpy.types.Mesh":
@@ -36,22 +56,6 @@ def _unit_cube_mesh() -> "bpy.types.Mesh":
         )
         mesh.validate()
     return mesh
-
-
-def _material(material_id: str, materials: dict) -> "bpy.types.Material":
-    name = f"VB/{material_id}"
-    mat = bpy.data.materials.get(name)
-    if mat is None:
-        mat = bpy.data.materials.new(name)
-        mat.use_nodes = True
-        bsdf = mat.node_tree.nodes.get("Principled BSDF")  # type: ignore[union-attr]
-        entry = materials.get(material_id, {})
-        color = sidecar.hex_to_rgb(entry.get("fallbackColor", "#9a9a9a"))
-        if bsdf is not None:
-            bsdf.inputs["Base Color"].default_value = (*color, 1.0)
-            if "metallic" in entry.get("maps", {}):
-                bsdf.inputs["Metallic"].default_value = 1.0
-    return mat
 
 
 def _level_origins() -> dict:
@@ -94,6 +98,8 @@ def import_sidecar(filepath: str, group_openings_s4: bool = False) -> tuple[int,
             report.append(f"sceneHash OK ({actual})")
 
     materials = sidecar.load_materials()
+    pbr, pbr_warnings = visual_materials.apply_pbr_materials()
+    report.extend(f"pbr: {w}" for w in pbr_warnings)
     plan = sidecar.plan_parts(data)
     origins = _level_origins()
     if not origins:
@@ -120,7 +126,7 @@ def import_sidecar(filepath: str, group_openings_s4: bool = False) -> tuple[int,
             obj.parent = origin
         for key, value in p.props.items():
             obj[key] = value
-        obj.data.materials.append(_material(p.material_id, materials))
+        obj.data.materials.append(_material(p.material_id, materials, pbr))
 
         home = level_collections.get(p.level_id)
         target = _stage_collection(home, p.collection) if home is not None else bpy.context.scene.collection
