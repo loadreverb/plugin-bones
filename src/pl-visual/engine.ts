@@ -1,7 +1,10 @@
 import { createHash } from 'node:crypto'
-import { extractLevels, extractWalls } from '../core/wall-model'
+import { extractLevels, extractSlabs, extractWalls } from '../core/wall-model'
+import { extractRoofs } from '../engines/roof-framing'
+import { groundRoofParts } from './ground-roof'
 import { masonryWallParts } from './masonry'
 import { PL_PRESETS, type PlPresets } from './presets'
+import { timberWallParts } from './timber'
 import type {
   PlVisualConfig,
   VisualBonesResult,
@@ -65,21 +68,34 @@ export function generateVisualBones(
   if (supported && tech) {
     const levels = extractLevels(sceneNodes)
     if (levels.length === 0) warnings.push('pl-visual: no levels found in scene')
-    if (tech.family === 'masonry') {
-      for (const level of levels) {
-        for (const wall of extractWalls(sceneNodes, level.id)) {
+    for (const level of levels) {
+      const walls = extractWalls(sceneNodes, level.id)
+      const slabs = extractSlabs(sceneNodes, level.id)
+      if (tech.family === 'masonry') {
+        for (const wall of walls) {
           const r = masonryWallParts(wall, level.id, tech.id, tech)
           parts.push(...r.parts)
           warnings.push(...r.warnings)
         }
+      } else if (tech.family === 'framing') {
+        for (const wall of walls) {
+          const r = timberWallParts(wall, level.id, tech.id, tech)
+          parts.push(...r.parts)
+          warnings.push(...r.warnings)
+        }
       }
-      warnings.push(
-        'pl-visual: foundation/floor/roof engines not implemented yet (PBV-05) — walls only',
+      const g = groundRoofParts(
+        level.id,
+        level.level,
+        walls,
+        slabs,
+        extractRoofs(sceneNodes, level.id).length > 0,
+        config,
+        tech.id,
+        presetData,
       )
-    } else {
-      warnings.push(
-        `pl-visual: ${tech.family} engine not implemented yet (PBV-04) — no parts generated`,
-      )
+      parts.push(...g.parts)
+      warnings.push(...g.warnings)
     }
   }
 

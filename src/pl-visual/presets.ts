@@ -54,6 +54,8 @@ export const PlPresets = z.strictObject({
       id: z.string(),
       name: z.string(),
       fields: z.array(z.string()),
+      /** Schematic visual defaults (metres), overridable by project config. */
+      defaults: z.record(z.string(), z.number()).optional(),
     }),
   ),
   floors: z.array(z.strictObject({ id: z.string(), name: z.string() })),

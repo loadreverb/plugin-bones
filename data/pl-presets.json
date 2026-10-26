@@ -20,7 +20,7 @@
     },
     {
       "id": "aac",
-      "name": "Beton komórkowy (AAC)",
+      "name": "Beton kom\u00f3rkowy (AAC)",
       "family": "masonry",
       "module": {
         "length": 0.6,
@@ -65,26 +65,35 @@
   "foundations": [
     {
       "id": "raft",
-      "name": "Płyta fundamentowa",
+      "name": "P\u0142yta fundamentowa",
       "fields": [
         "slabThicknessM"
-      ]
+      ],
+      "defaults": {
+        "slabThicknessM": 0.3
+      }
     },
     {
       "id": "strip",
-      "name": "Ławy fundamentowe",
+      "name": "\u0141awy fundamentowe",
       "fields": [
         "footingWidthM",
         "footingDepthM",
         "stemwallHeightM",
         "groundSlabThicknessM"
-      ]
+      ],
+      "defaults": {
+        "footingWidthM": 0.6,
+        "footingDepthM": 0.3,
+        "stemwallHeightM": 0.4,
+        "groundSlabThicknessM": 0.15
+      }
     }
   ],
   "floors": [
     {
       "id": "concrete_slab",
-      "name": "Płyta żelbetowa, schematyczna"
+      "name": "P\u0142yta \u017celbetowa, schematyczna"
     },
     {
       "id": "timber_joists",

@@ -183,16 +183,20 @@ describe('PBV-03 · golden house through generateVisualBones', () => {
   test('all four walls coursed at S2 with unique IDs and correct material', () => {
     expect(result.parts.length).toBeGreaterThan(100)
     expect(new Set(result.parts.map((p) => p.id)).size).toBe(result.parts.length)
-    expect(new Set(result.parts.map((p) => p.sourceId))).toEqual(
+    const wallWork = result.parts.filter(
+      (p) => p.role === 'masonry-unit' || p.role === 'lintel',
+    )
+    expect(new Set(wallWork.map((p) => p.sourceId))).toEqual(
       new Set(['wall_pl_south', 'wall_pl_east', 'wall_pl_north', 'wall_pl_west']),
     )
-    for (const p of result.parts) {
+    for (const p of wallWork) {
       expect(p.stage).toBe('S2')
       expect(p.levelId).toBe('level_pl1')
       if (p.role === 'masonry-unit') expect(p.materialId).toBe('ceramic_red')
       expect(p.sequence).toBeGreaterThanOrEqual(2000)
     }
-    expect(result.summary.stageCounts.S2).toBe(result.parts.length)
+    expect(result.summary.stageCounts.S2).toBe(wallWork.length)
+    expect(result.summary.stageCounts.S1).toBeGreaterThanOrEqual(1) // raft slab
   })
 
   test('no piece inside the golden door/window voids (world-space check)', () => {
